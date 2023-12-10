@@ -5,7 +5,7 @@ class PolylineDrawer:
         self.master = master
         self.master.title("Polyline Drawer")
 
-        self.canvas = tk.Canvas(self.master, bg="white", width=400, height=400)
+        self.canvas = tk.Canvas(self.master, bg="white", width=150, height=200)
         self.canvas.pack(expand=tk.YES, fill=tk.BOTH)
 
         self.polylines = []
@@ -21,6 +21,9 @@ class PolylineDrawer:
         correction_button = tk.Button(self.master, text="Correct Points", command=self.correct_points)
         correction_button.pack()
 
+        clear_button = tk.Button(self.master, text="Clear", command=self.clear)
+        clear_button.pack()
+
         export_button = tk.Button(self.master, text="Export Data", command=self.export_data)
         export_button.pack()
 
@@ -28,7 +31,14 @@ class PolylineDrawer:
         self.canvas.bind("<B1-Motion>", self.on_drag)
         self.canvas.bind("<Double-Button-1>", self.on_double_click)
         self.master.bind("<Escape>", self.remove_last_point)
+        self.start_drawing()
 
+    def clear(self):
+        self.canvas.delete('all')
+        self.polylines = [[]]
+        self.current_line = None     # canvas object
+        self.selected_point = None   # coded as : (i, polyline)
+        self.selected_point_square = None
 
     def start_drawing(self):
         self.polylines.append([])
