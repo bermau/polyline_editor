@@ -27,6 +27,7 @@ class PolylineDrawer:
         self.canvas.bind("<Button-1>", self.on_click)
         self.canvas.bind("<B1-Motion>", self.on_drag)
         self.canvas.bind("<Double-Button-1>", self.on_double_click)
+        self.master.bind("<Escape>", self.remove_last_point)
 
 
     def start_drawing(self):
@@ -105,12 +106,21 @@ class PolylineDrawer:
         except ValueError:
             print("Invalid correction format. Please enter integers separated by a comma.")
 
+    def remove_last_point(self, event):
+        if self.polylines:
+            current_polyline = self.polylines[-1]
+            if current_polyline:
+                current_polyline.pop()
+                if len(current_polyline) > 1:
+                    self.draw_line(current_polyline)
+
     def export_data(self):
         print("Exporting data:")
+        lst = []
         for i, polyline in enumerate(self.polylines):
-            print(f"Polyline {i + 1} data:")
-            for point in polyline:
-                print(f"Point: {point}")
+            pl_str = ", ".join([str(point) for point in polyline])
+            lst.append("[" + pl_str + "]")
+        print("["+", ".join(lst)+"]")
 
 if __name__ == "__main__":
     root = tk.Tk()
