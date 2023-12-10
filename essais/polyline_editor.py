@@ -1,11 +1,14 @@
 import tkinter as tk
 
+
+WIDTH = 150
+HEIGHT = 200
 class PolylineDrawer:
     def __init__(self, master):
         self.master = master
         self.master.title("Polyline Drawer")
 
-        self.canvas = tk.Canvas(self.master, bg="white", width=150, height=200)
+        self.canvas = tk.Canvas(self.master, bg="white", width=WIDTH, height=HEIGHT)
         self.canvas.pack(expand=tk.YES, fill=tk.BOTH)
 
         self.polylines = []
