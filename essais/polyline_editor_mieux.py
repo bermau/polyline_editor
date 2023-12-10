@@ -11,6 +11,7 @@ class PolylineDrawer:
         self.polylines = []
         self.current_line = None     # canvas object
         self.selected_point = None   # coded as : (i, polyline)
+        self.selected_point_square = None
         self.correction_entry = tk.Entry(self.master)
         self.correction_entry.pack()
 
@@ -26,6 +27,7 @@ class PolylineDrawer:
         self.canvas.bind("<Button-1>", self.on_click)
         self.canvas.bind("<B1-Motion>", self.on_drag)
         self.canvas.bind("<Double-Button-1>", self.on_double_click)
+
 
     def start_drawing(self):
         self.polylines.append([])
@@ -46,6 +48,8 @@ class PolylineDrawer:
 
         if len(current_polyline) > 1:
             self.draw_line(current_polyline)
+        else:
+            self.draw_point(x,y)
 
     def on_double_click(self, event):
         x, y = event.x, event.y
@@ -66,6 +70,14 @@ class PolylineDrawer:
             self.draw_line(polyline)
             self.display_selected_point()
 
+    def draw_point(self, x, y):
+        if self.selected_point:
+            i, polyline = self.selected_point
+            print(f"détruire {i}, d{polyline}")
+            self.canvas.delete(self.selected_point_square)
+
+        self.selected_point_square = self.canvas.create_rectangle(x-2, y-2, x+2, y+2)
+
     def draw_line(self, polyline):
         if self.current_line:
             self.canvas.delete(self.current_line)
@@ -76,6 +88,7 @@ class PolylineDrawer:
         if self.selected_point is not None:
             i, polyline = self.selected_point
             x, y = polyline[i]
+            self.draw_point(x, y)
             self.correction_entry.delete(0, tk.END)
             self.correction_entry.insert(0, f"{x},{y}")
 
