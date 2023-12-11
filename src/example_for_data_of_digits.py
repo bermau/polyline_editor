@@ -1,6 +1,6 @@
 SIZE_X = 150
 SIZE_Y = 200
-__version__ = "0.1"
+__version__ = "0.2"
 # Data are plotted from my polyline_editor tool.
 data = {
     '0': [[(80, 9), (49, 13), (27, 35), (14, 60), (11, 98), (11, 137), (18, 168), (51, 185), (72, 191), (83, 190),
@@ -24,8 +24,8 @@ data = {
 }
 
 
-# LA grille initiale était de 150, 200.
-# Les ccordonnées ci dessus sont façon pygame, je préfère le cartésien.
+# La grille initiale était de 150, 200.
+# Les coordonnées ci-dessus sont façon pygame, je préfère le cartésien.
 def pygame_to_cartersian(point):
     """
     :param point:
@@ -34,7 +34,7 @@ def pygame_to_cartersian(point):
     >>> pygame_to_cartersian((25, 30))
     (25, 170)
     """
-    return (point[0], SIZE_Y - point[1])
+    return point[0], SIZE_Y - point[1]
 
 
 data_cart = {}
@@ -52,8 +52,8 @@ PEN_DOWN = "G0 Z-1 ; pen down"
 
 class Tracer:
     def __init__(self):
-        self.font_with = 2    # mm
-        self.font_height = 2  # mm
+        self.font_with = 3    # mm
+        self.font_height = 5  # mm
         self.cur_x = 0
         self.cur_y = 0  # Suit la position en bas à gauche pour chaque lettre.
 
@@ -82,7 +82,7 @@ class Tracer:
                         x, y = self.correct_x(point), self.correct_y(point)
                         gcode.append(f"G0 X{str(x)} Y{str(y)}")
                     gcode.append(PEN_UP)
-            self.cur_x += 2  # mm
+            self.cur_x += self.font_with  # mm
             return gcode
 
     def correct_y(self, point) -> float:
@@ -96,7 +96,7 @@ class Tracer:
 
 if __name__ == '__main__':
     t = Tracer()
-    word = "234"
+    word = "567"
     retour_x, retour_y = (0, 0)
     code = [f"; version {__version__}"]
     code.append(PEN_UP)
