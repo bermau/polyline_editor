@@ -126,6 +126,7 @@ Features:
         self.selected_point_square = self.canvas.create_rectangle(x - 2, y - 2, x + 2, y + 2)
 
     def draw_line(self, polyline):
+        """Draw a line"""
         if self.current_line:
             self.canvas.delete(self.current_line)
         self.current_line = self.canvas.create_line(polyline, fill="black")
