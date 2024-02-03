@@ -27,7 +27,8 @@ data = {
 # La grille initiale était de 150, 200.
 # Les coordonnées ci-dessus sont façon pygame, je préfère le cartésien.
 def pygame_to_cartersian(point):
-    """
+    """Convert data from the pygame representation to Cartesian representation. In pygame, the origin of the axes is
+     at the top-left. In the usual Cartesian representation, the origin is at the bottom-left.
     :param point:
     :return:
 
@@ -98,8 +99,7 @@ if __name__ == '__main__':
     t = Tracer()
     word = "567"
     retour_x, retour_y = (0, 0)
-    code = [f"; version {__version__}"]
-    code.append(PEN_UP)
+    code = [f"; Version {__version__}", PEN_UP]
     for letter in word:
         code += t.tracer_lettre(letter)
     for line in code:

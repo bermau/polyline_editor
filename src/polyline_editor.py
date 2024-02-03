@@ -1,9 +1,19 @@
 import tkinter as tk
 
-
 WIDTH = 150
 HEIGHT = 200
+
+
 class PolylineDrawer:
+    """A path generator using Tkinter. This class creates a Tkinter window to draw paths interactively.
+    The drawn paths are recorded and stored as a list of coordinates.
+
+Features:
+- Allows drawing polylines.
+- Provides the ability to correct the position of a point.
+- Supports clearing the screen.
+- Enables exporting data as a list of lists of points.
+"""
     def __init__(self, master):
         self.master = master
         self.master.title("Polyline Drawer")
@@ -12,8 +22,8 @@ class PolylineDrawer:
         self.canvas.pack(expand=tk.YES, fill=tk.BOTH)
 
         self.polylines = []
-        self.current_line = None     # canvas object
-        self.selected_point = None   # coded as : (i, polyline)
+        self.current_line = None  # canvas object
+        self.selected_point = None  # coded as : (i, polyline)
         self.selected_point_square = None
         self.correction_entry = tk.Entry(self.master)
         self.correction_entry.pack()
@@ -37,17 +47,37 @@ class PolylineDrawer:
         self.start_drawing()
 
     def clear(self):
+        """Clear the canvas."""
         self.canvas.delete('all')
         self.polylines = [[]]
-        self.current_line = None     # canvas object
-        self.selected_point = None   # coded as : (i, polyline)
+        self.current_line = None  # canvas object
+        self.selected_point = None  # coded as : (i, polyline)
         self.selected_point_square = None
 
     def start_drawing(self):
+        """Initiate drawing"""
         self.polylines.append([])
         self.current_line = None
 
     def on_click(self, event):
+        """
+        Handle mouse clicks within the Tkinter window associated with PolylineDrawer.
+
+    If the click is near an existing point, select it. Otherwise, extend the selected polyline by adding a new point at
+    the clicked coordinates.
+
+    Parameters:
+    - event (Tkinter Event): The mouse click event containing coordinates (event.x, event.y).
+
+    Returns:   None
+
+    Notes:
+    - The method checks for existing points in all polylines and selects the nearest point if found.
+    - A tolerance of ±5 pixels is used to determine proximity to an existing point.
+    - If no existing point is near the click, it extends the last polyline with a new point at the clicked coordinates.
+    - Draws a line between points if the polyline has more than one point; otherwise, it draws a single point.
+
+        """
         x, y = event.x, event.y
 
         for polyline in self.polylines:
@@ -63,9 +93,10 @@ class PolylineDrawer:
         if len(current_polyline) > 1:
             self.draw_line(current_polyline)
         else:
-            self.draw_point(x,y)
+            self.draw_point(x, y)
 
     def on_double_click(self, event):
+        """On double_click, close the path."""
         x, y = event.x, event.y
 
         for polyline in self.polylines:
@@ -77,6 +108,7 @@ class PolylineDrawer:
                     return
 
     def on_drag(self, event):
+        """On drag, move the selected point."""
         if self.selected_point is not None:
             x, y = event.x, event.y
             i, polyline = self.selected_point
@@ -85,18 +117,18 @@ class PolylineDrawer:
             self.display_selected_point()
 
     def draw_point(self, x, y):
+        """Draw a point."""
         if self.selected_point:
             i, polyline = self.selected_point
             print(f"détruire {i}, d{polyline}")
             self.canvas.delete(self.selected_point_square)
 
-        self.selected_point_square = self.canvas.create_rectangle(x-2, y-2, x+2, y+2)
+        self.selected_point_square = self.canvas.create_rectangle(x - 2, y - 2, x + 2, y + 2)
 
     def draw_line(self, polyline):
         if self.current_line:
             self.canvas.delete(self.current_line)
         self.current_line = self.canvas.create_line(polyline, fill="black")
-
 
     def display_selected_point(self):
         if self.selected_point is not None:
@@ -128,12 +160,14 @@ class PolylineDrawer:
                     self.draw_line(current_polyline)
 
     def export_data(self):
+        """Print the paths."""
         print("Exporting data:")
         lst = []
         for i, polyline in enumerate(self.polylines):
             pl_str = ", ".join([str(point) for point in polyline])
             lst.append("[" + pl_str + "]")
-        print("["+", ".join(lst)+"]")
+        print("[" + ", ".join(lst) + "]")
+
 
 if __name__ == "__main__":
     root = tk.Tk()
